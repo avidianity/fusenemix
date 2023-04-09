@@ -25,8 +25,8 @@ Route::middleware('auth:users')->group(function () {
         Route::get('{file}/download', 'download')->name('download');
     });
     Route::apiResource('files', FileController::class)->except(['update']);
+});
 
-    Route::prefix('internal')->as('internal.')->controller(InternalController::class)->group(function () {
-        Route::get('enum/{type}', 'enum')->name('enum');
-    });
+Route::prefix('internal')->as('internal.')->controller(InternalController::class)->group(function () {
+    Route::get('enum/{type}', 'enum')->name('enum');
 });

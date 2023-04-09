@@ -2,9 +2,11 @@
 
 namespace App\Jobs;
 
+use App\Enums\File\Type;
 use App\Enums\Job\Status;
 use App\Models\Job;
 use App\Models\User;
+use App\Services\File\MetaService;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
@@ -47,6 +49,11 @@ class FileImport implements ShouldQueue
                 'error' => null,
             ]);
 
+            /**
+             * @var MetaService
+             */
+            $metaService = app(MetaService::class);
+
             $setting = $this->setting;
             $files = $this->files;
             $user = $this->user;
@@ -63,6 +70,8 @@ class FileImport implements ShouldQueue
 
             $processedFiles = collect();
 
+            $totalFiles = count($files);
+
             try {
                 foreach ($files as $index => $file) {
                     $filePath = data_get($file, 'path');
@@ -73,6 +82,11 @@ class FileImport implements ShouldQueue
 
                     $userStorage->put($path, $binary);
 
+                    $meta = match ($type) {
+                        Type::MUSIC => $metaService->getMusicDetails($binary),
+                        default => [],
+                    };
+
                     $processedFile = $user->files()->create([
                         'name' => $filePath,
                         'size' => strlen($binary),
@@ -80,14 +94,13 @@ class FileImport implements ShouldQueue
                         'path' => $path,
                         'driver' => $setting['driver'],
                         'config' => $setting['config'],
-                        // TODO: use FFMpeg to parse metadata
-                        'meta' => [],
+                        'meta' => $meta,
                     ]);
 
                     $processedFiles->push($processedFile);
 
                     $this->item->update([
-                        'progress' => calculatePercentage($index + 1, 0, count($files))
+                        'progress' => calculatePercentage($index + 1, 0, $totalFiles),
                     ]);
                 }
             } catch (Throwable $exception) {

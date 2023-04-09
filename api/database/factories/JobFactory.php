@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\Job\Status;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,10 @@ class JobFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'type' => $this->faker->text(10),
+            'progress' => 0,
+            'status' => Status::random(),
+            'error' => null,
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Audio\Mp3;
+use Illuminate\Support\Facades\Storage;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,5 +47,12 @@ uses(
  */
 function createFakeMusicBinary(): string
 {
-    return file_get_contents(storage_path('test.mp3'));
+    $options = [
+        'driver' => 'local',
+        'root' => storage_path(),
+    ];
+
+    $storage = Storage::build($options);
+
+    return $storage->get('test.mp3');
 }

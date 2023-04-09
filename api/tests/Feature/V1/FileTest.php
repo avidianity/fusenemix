@@ -130,7 +130,7 @@ it('imports files', function () {
     });
 
     $storage->delete($fileName);
-});
+})->group('v1.files');
 
 it('fails import files', function () {
     Queue::fake();
@@ -168,4 +168,40 @@ it('fails import files', function () {
     $response = postJson(route('v1.files.import'), $payload);
 
     $response->assertBadRequest();
-});
+})->group('v1.files');
+
+it('downloads a file', function () {
+    Queue::fake();
+    $user = User::factory()->create();
+    actingAs($user);
+
+    $path = storage_path('testing/music');
+
+    $fileName = Str::random(8) . '.txt';
+
+    $content = 'sample';
+
+    $file = $user->files()->create([
+        'name' => $fileName,
+        'driver' => 'local',
+        'path' => $fileName,
+        'config' => [
+            'root' => $path,
+        ],
+        'size' => strlen($content),
+        'type' => FileType::random(),
+    ]);
+
+    $storage = Storage::build([
+        'driver' => 'local',
+        'root' => $path,
+    ]);
+
+    $storage->put($fileName, $content);
+
+    $response = getJson(route('v1.files.download', ['file' => $file->getKey()]));
+
+    $response->assertOk();
+
+    $storage->delete($fileName);
+})->group('v1.files');
