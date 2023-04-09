@@ -1,4 +1,5 @@
 <?php
+
 // @formatter:off
 // phpcs:ignoreFile
 
@@ -9,10 +10,7 @@ namespace Illuminate\Http {
     class Request
     {
         /**
-         * UGet the user making the request.
-         *
-         * @param string|null $guard
-         * @return \App\Models\User
+         * Get the user making the request.
          */
         public function user(string $guard = null): User
         {

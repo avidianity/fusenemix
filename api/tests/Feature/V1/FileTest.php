@@ -9,7 +9,6 @@ use App\Models\User;
 use Illuminate\Support\Facades\Queue;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\deleteJson;
 use function Pest\Laravel\getJson;
@@ -22,7 +21,7 @@ it('fetches files', function () {
     File::factory()->for($user)->create();
 
     $response = getJson(route('v1.files.index', [
-        'type' => collect(FileType::values())->random()
+        'type' => collect(FileType::values())->random(),
     ]));
 
     $response->assertOk();
@@ -45,7 +44,7 @@ it('destroys a file', function () {
 
     $path = str(Str::random())->append('.txt')->toString();
     $config = [
-        'root' => storage_path('storage/testing')
+        'root' => storage_path('storage/testing'),
     ];
 
     $fileData = [
@@ -118,7 +117,7 @@ it('imports files', function () {
                 'path' => $fileName,
                 'type' => FileType::MUSIC(),
             ],
-        ]
+        ],
     ];
 
     $response = postJson(route('v1.files.import'), $payload);
@@ -162,7 +161,7 @@ it('fails import files', function () {
                 'path' => $fileName,
                 'type' => FileType::MUSIC(),
             ],
-        ]
+        ],
     ];
 
     $response = postJson(route('v1.files.import'), $payload);

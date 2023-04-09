@@ -20,7 +20,7 @@ $datasets = [
         'driver' => 'local',
         'config' => [
             'root' => '/path/to/my/filesystem',
-        ]
+        ],
     ],
 ];
 

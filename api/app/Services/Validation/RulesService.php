@@ -4,7 +4,6 @@ namespace App\Services\Validation;
 
 use App\Enums\Setting\Type as SettingType;
 use App\Exceptions\Validation\RulesServiceException;
-use Exception;
 use Illuminate\Validation\Rule;
 
 class RulesService
@@ -31,7 +30,7 @@ class RulesService
 
         return match ($driver) {
             'local' => [
-                'root' => ['required', 'string', 'max:255']
+                'root' => ['required', 'string', 'max:255'],
             ],
             's3' => [
                 'key' => ['required', 'string', 'max:255'],

@@ -54,7 +54,7 @@ class AppServiceProvider extends ServiceProvider
         /**
          * Get the user making the request or fail
          *
-         * @param string|null $guard
+         * @param  string|null  $guard
          * @return \App\Models\User
          */
         Request::macro('userOrFail', function (string $guard = null): User {
@@ -62,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
             $user = $this->user($guard);
 
             if (!$user) {
-                throw new Exception("User is missing.");
+                throw new Exception('User is missing.');
             }
 
             return $user;

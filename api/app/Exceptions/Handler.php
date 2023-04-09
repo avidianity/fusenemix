@@ -9,7 +9,6 @@ use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Response;
 use Illuminate\Validation\ValidationException;
 use PHPOpenSourceSaver\JWTAuth\Exceptions\JWTException;
-use Str;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 

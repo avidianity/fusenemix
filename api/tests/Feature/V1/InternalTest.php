@@ -2,7 +2,6 @@
 
 use App\Enums\File\Type as FileType;
 use App\Enums\Setting\Type as SettingType;
-
 use function Pest\Laravel\getJson;
 
 it('fetches enums', function (array $payload) {

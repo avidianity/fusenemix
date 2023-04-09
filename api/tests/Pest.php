@@ -1,7 +1,5 @@
 <?php
 
-use FFMpeg\FFMpeg;
-use FFMpeg\Format\Audio\Mp3;
 use Illuminate\Support\Facades\Storage;
 
 /*

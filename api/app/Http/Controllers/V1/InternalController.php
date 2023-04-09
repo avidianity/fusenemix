@@ -19,7 +19,7 @@ class InternalController extends Controller
             'data' => $enum,
             'meta' => [
                 'type' => $type,
-            ]
+            ],
         ]);
     }
 }

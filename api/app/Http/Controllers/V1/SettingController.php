@@ -6,7 +6,6 @@ use App\Enums\Setting\Type;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\V1\Setting\StoreRequest;
 use App\Http\Resources\SettingResource;
-use App\Models\Setting;
 use App\Models\User;
 use App\Services\Validation\RulesService;
 use Illuminate\Http\Request;

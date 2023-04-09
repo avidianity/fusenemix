@@ -6,7 +6,6 @@ use ArchTech\Enums\Values;
 use BackedEnum;
 use Illuminate\Support\Arr;
 
-
 /**
  * @mixin Values
  * @mixin BackedEnum

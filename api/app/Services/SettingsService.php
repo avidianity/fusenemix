@@ -6,7 +6,6 @@ use App\Enums\Setting\Type;
 use App\Exceptions\MissingSettingException;
 use App\Models\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
-use Throwable;
 
 class SettingsService
 {

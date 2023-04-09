@@ -30,7 +30,7 @@ it('imports files', function () {
             'driver' => 'local',
             'config' => [
                 'root' => $root,
-            ]
+            ],
         ],
     ]);
 
@@ -42,7 +42,7 @@ it('imports files', function () {
             [
                 'type' => FileType::MUSIC(),
                 'path' => $fileName,
-            ]
+            ],
         ],
         user: $user,
         setting: $settingsService->get(SettingType::FILESYSTEM),
@@ -88,7 +88,7 @@ it('fails to import files with invalid config', function () {
             'driver' => 'local',
             'config' => [
                 'root' => $root,
-            ]
+            ],
         ],
     ]);
 
@@ -100,7 +100,7 @@ it('fails to import files with invalid config', function () {
             [
                 'type' => FileType::MUSIC(),
                 'path' => $fileName,
-            ]
+            ],
         ],
         user: $user,
         setting: $settingsService->get(SettingType::FILESYSTEM),
@@ -130,7 +130,7 @@ it('fails to process', function () {
             [
                 'type' => FileType::MUSIC(),
                 'path' => 'test.mp3',
-            ]
+            ],
         ],
         user: $job->user,
         setting: [],
