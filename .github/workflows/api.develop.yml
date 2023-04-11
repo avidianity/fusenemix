@@ -9,7 +9,8 @@ on:
 jobs:
   api:
     runs-on: ubuntu-latest
-
+    env:
+      DEBIAN_FRONTEND: noninteractive
     services:
       fusenemix-mysql:
         image: mysql:8.0
@@ -31,7 +32,7 @@ jobs:
     steps:
       - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
         with:
-          php-version: "8.1"
+          php-version: "8.2"
       - uses: actions/checkout@v2
       - name: Install apt dependencies
         run: sudo apt-get install -y ffmpeg
