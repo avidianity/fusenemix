@@ -17,8 +17,7 @@ jobs:
         env:
           MYSQL_ROOT_HOST: "%"
           MYSQL_ALLOW_EMPTY_PASSWORD: 1
-          MYSQL_ROOT_PASSWORD: root
-          MYSQL_DATABASE: testing
+          MYSQL_DATABASE: fusenemix
           MYSQL_USER: fusenemix
           MYSQL_PASSWORD: password
         ports:
