@@ -33,12 +33,6 @@ jobs:
         with:
           php-version: "8.2"
       - uses: actions/checkout@v2
-      - name: Cache apt packages
-        uses: actions/cache@v2
-        with:
-          path: /var/cache/apt
-          key: ${{ runner.os }}-apt-${{ hashFiles('**/apt.lock') }}
-          restore-keys: ${{ runner.os }}-apt-
       - name: Install apt dependencies
         run: sudo apt-get install -y ffmpeg
       - name: Copy .env
