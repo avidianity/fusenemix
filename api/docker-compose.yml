@@ -1,0 +1,27 @@
+version: '3'
+services:
+  mysql:
+    container_name: 'fusenemix-mysql'
+    image: 'mysql/mysql-server:8.0'
+    ports:
+      - '${DB_PORT:-3306}:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: '${DB_PASS}'
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: '${DB_NAME}'
+      MYSQL_USER: '${DB_USER}'
+      MYSQL_PASSWORD: '${DB_PASS}'
+      MYSQL_ALLOW_EMPTY_PASSWORD: 1
+    volumes:
+      - 'fusenemix-mysql:/var/lib/mysql'
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - '-p${DB_PASS}'
+      retries: 3
+      timeout: 5s
+volumes:
+  fusenemix-mysql:
+    driver: local

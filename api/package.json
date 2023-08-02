@@ -1,0 +1,36 @@
+{
+  "name": "fusenemix-api",
+  "module": "main.ts",
+  "type": "commonjs",
+  "scripts": {
+    "start": "bun run src/main.ts",
+    "serve": "bun --watch run src/main.ts",
+    "migrate": "bun run src/scripts/migrate.ts",
+    "migrate:generate": "drizzle-kit generate:mysql",
+    "seed": "bun run src/scripts/seed.ts"
+  },
+  "devDependencies": {
+    "@fastify/middie": "^8.3.0",
+    "@types/cors": "^2.8.13",
+    "@types/lodash": "^4.14.196",
+    "@types/node": "^20.4.5",
+    "bun-types": "latest",
+    "cors": "^2.8.5",
+    "drizzle-kit": "^0.19.12",
+    "ts-node": "^10.9.1",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@types/jsonwebtoken": "8.5.1",
+    "dayjs": "^1.11.9",
+    "dotenv": "^16.3.1",
+    "drizzle-orm": "^0.27.2",
+    "fastify": "^4.21.0",
+    "jsonwebtoken": "8.5.1",
+    "lodash": "^4.17.21",
+    "mysql2": "^3.5.2",
+    "ulid": "^2.3.0",
+    "yup": "^1.2.0"
+  }
+}
