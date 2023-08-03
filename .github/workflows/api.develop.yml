@@ -9,8 +9,12 @@ on:
 jobs:
   api:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [18.x]
     env:
       DEBIAN_FRONTEND: noninteractive
+      CLOUDMERSIVE_KEY: ${{ secrets.CLOUDMERSIVE_KEY }}
     services:
       fusenemix-mysql:
         image: mysql/mysql-server:8.0
@@ -29,27 +33,19 @@ jobs:
           --health-retries=3
 
     steps:
-      - uses: shivammathur/setup-php@15c43e89cdef867065b0213be354c2841860869e
-        with:
-          php-version: "8.2"
       - uses: actions/checkout@v2
       - name: Install apt dependencies
         run: sudo apt-get install -y ffmpeg
-      - name: Copy .env
-        run: php -r "file_exists('.env') || copy('.env.example', '.env');"
-        working-directory: api
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
       - name: Install Dependencies
-        run: composer install -q --no-ansi --no-interaction --no-scripts --prefer-dist
+        run: npm install
         working-directory: api
-      - name: Generate key
-        run: php artisan key:generate
+      - name: Run linter
+        run: npm run lint
         working-directory: api
-      - name: Generate JWT Secret
-        run: php artisan jwt:secret -f
-        working-directory: api
-      - name: Directory Permissions
-        run: chmod -R 777 storage bootstrap/cache
-        working-directory: api
-      - name: Execute tests (Unit and Feature tests) via PestPHP
-        run: php artisan test --coverage
+      - name: Check formatting
+        run: npm run format:check
         working-directory: api
