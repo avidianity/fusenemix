@@ -46,6 +46,9 @@ jobs:
       - name: Install Dependencies
         run: npm install
         working-directory: api
+      - name: Check build
+        run: npm run build:check
+        working-directory: api
       - name: Migrate database
         run: npm run migrate
         working-directory: api
