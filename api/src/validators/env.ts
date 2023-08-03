@@ -3,7 +3,7 @@ import * as yup from 'yup';
 export const envSchema = yup.object({
   ENV: yup
     .string()
-    .oneOf(['development', 'production'] as const)
+    .oneOf(['development', 'production', 'testing'] as const)
     .required(),
   PORT: yup.number().nullable(),
   SECRET: yup.string().required(),

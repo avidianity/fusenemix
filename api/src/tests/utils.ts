@@ -1,12 +1,11 @@
 import axios from 'axios';
-import { FastifyInstance } from 'fastify';
-import { main as seedMain } from '@/scripts/seed';
-import { MySql2Database } from 'drizzle-orm/mysql2';
+import type { FastifyInstance } from 'fastify';
+import type { MySql2Database } from 'drizzle-orm/mysql2';
 import { migrate as migrator } from 'drizzle-orm/mysql2/migrator';
 import path from 'path';
 import * as models from '@/models';
 import * as hash from '@/lib/hash';
-import { NewUser } from '@/models/users';
+import type { NewUser } from '@/models/users';
 import { eq } from 'drizzle-orm';
 import { ulid } from 'ulid';
 
