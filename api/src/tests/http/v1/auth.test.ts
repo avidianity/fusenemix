@@ -5,7 +5,9 @@ import * as utils from '@/tests/utils';
 tap.test('login', async (t) => {
   t.plan(2);
 
-  const { server, db, connection } = await main();
+  const { server, db } = await main({
+    logger: false,
+  });
 
   await server.listen();
 
@@ -29,6 +31,5 @@ tap.test('login', async (t) => {
 
   t.teardown(() => {
     server.close();
-    connection.destroy();
   });
 });

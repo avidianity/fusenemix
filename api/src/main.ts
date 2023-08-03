@@ -67,5 +67,9 @@ export async function main(
 
   server.setErrorHandler(errorHandler);
 
-  return { server, env, db, connection };
+  server.addHook('onClose', () => {
+    connection.destroy();
+  });
+
+  return { server, env, db };
 }
