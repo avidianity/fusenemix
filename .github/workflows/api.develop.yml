@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [18.x, 16.x]
     env:
       DEBIAN_FRONTEND: noninteractive
       CLOUDMERSIVE_KEY: ${{ secrets.CLOUDMERSIVE_KEY }}
@@ -40,6 +40,9 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
+      - name: Copy .env
+        run: cp .env.testing .env
+        working-directory: api
       - name: Install Dependencies
         run: npm install
         working-directory: api
