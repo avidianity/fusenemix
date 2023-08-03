@@ -43,6 +43,12 @@ jobs:
       - name: Install Dependencies
         run: npm install
         working-directory: api
+      - name: Migrate database
+        run: npm run migrate
+        working-directory: api
+      - name: Seed database
+        run: npm run seed
+        working-directory: api
       - name: Run linter
         run: npm run lint
         working-directory: api
