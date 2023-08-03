@@ -1,6 +1,5 @@
 import '@/shims';
 import fastify from 'fastify';
-import dotenv from 'dotenv';
 import path from 'path';
 import { envSchema } from '@/validators/env';
 import middleware from '@fastify/middie';
@@ -13,6 +12,7 @@ import { json } from '@/helpers/response';
 import { type ErrorHandler, type Route } from '@/types/routing';
 import { HttpException } from '@/exceptions/http';
 import { JsonWebTokenError } from 'jsonwebtoken';
+import { loadEnv } from '@/lib/env';
 
 const errorHandler = ((error, _, handler) => {
   if (error instanceof ValidationError) {
@@ -36,9 +36,7 @@ const route = (route: Route): Route => {
 };
 
 async function main() {
-  dotenv.config({
-    path: path.resolve(__dirname, '../.env'),
-  });
+  loadEnv();
 
   const env = await envSchema.validate(process.env, { abortEarly: false });
 
