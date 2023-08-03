@@ -42,7 +42,7 @@ const route = (route: Route): Route => {
 export async function main(
   options?: FastifyHttpOptions<Server, FastifyBaseLogger>,
 ) {
-  loadEnv();
+  await loadEnv();
 
   const env = await envSchema.validate(process.env, { abortEarly: false });
 

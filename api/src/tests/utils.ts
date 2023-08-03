@@ -1,5 +1,6 @@
 import axios from 'axios';
 import type { FastifyInstance } from 'fastify';
+import { faker as fakerjs } from '@faker-js/faker';
 
 export function createClient(server: FastifyInstance) {
   const address = server.server.address();
@@ -10,3 +11,5 @@ export function createClient(server: FastifyInstance) {
     baseURL: port ? `http://localhost:${port}` : (address as string),
   });
 }
+
+export const faker = fakerjs;

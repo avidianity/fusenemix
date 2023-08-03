@@ -4,7 +4,7 @@ import * as models from '@/models';
 import { loadEnv } from '@/lib/env';
 
 export async function main() {
-  loadEnv();
+  await loadEnv();
   const env = await envSchema.validate(process.env, { abortEarly: false });
 
   const { db } = await database.connect(env);

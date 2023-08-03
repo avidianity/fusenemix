@@ -42,7 +42,11 @@ export const login: Handler = async (request, response) => {
 
   json(response, {
     data: omit(user, ['password']),
-    access: { token, type: 'Bearer', expires: expiry },
+    access: {
+      type: 'Bearer',
+      token,
+      expires: expiry,
+    },
   });
 };
 
@@ -84,7 +88,14 @@ export const register: Handler = async (request, response) => {
 
   const user = result[0];
 
+  const { token, expiry } = await auth.createToken(user, request.env);
+
   json(response, {
     data: omit(user, ['password']),
+    access: {
+      type: 'Bearer',
+      token,
+      expires: expiry,
+    },
   });
 };
