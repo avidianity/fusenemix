@@ -71,5 +71,5 @@ export async function main(
     connection.destroy();
   });
 
-  return { server, env, db };
+  return { server, env };
 }

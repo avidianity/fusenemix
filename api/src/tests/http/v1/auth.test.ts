@@ -5,15 +5,13 @@ import * as utils from '@/tests/utils';
 tap.test('login', async (t) => {
   t.plan(2);
 
-  const { server, db } = await main({
+  const { server } = await main({
     logger: false,
   });
 
   await server.listen();
 
   const client = utils.createClient(server);
-  await utils.migrate(db);
-  await utils.seed(db);
 
   const payload = {
     email: 'manlupigjohnmichael@gmail.com',
