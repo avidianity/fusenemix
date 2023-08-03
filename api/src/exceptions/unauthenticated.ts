@@ -1,4 +1,4 @@
-import { HttpException } from './http';
+import { HttpException } from '@/exceptions/http';
 
 export class UnauthenticatedException extends HttpException {
   constructor(message: string) {

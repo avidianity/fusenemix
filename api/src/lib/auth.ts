@@ -1,15 +1,13 @@
-import { User } from '@/models/users';
-import { envSchema } from '@/validators/env';
+import { type User } from '@/models/users';
+import { type Env } from '@/validators/env';
 import jwt from 'jsonwebtoken';
 import dayjs from 'dayjs';
-import { Database } from '@/types/database';
+import { type Database } from '@/types/database';
 import * as models from '@/models';
 import { eq } from 'drizzle-orm';
 import { InvalidTokenException } from '@/exceptions/invalid-token';
 
-export async function createToken(user: User) {
-  const env = await envSchema.validate(process.env, { abortEarly: false });
-
+export async function createToken(user: User, env: Env) {
   const expiry = dayjs().add(1, 'hour').unix();
 
   const token = jwt.sign(
@@ -18,15 +16,13 @@ export async function createToken(user: User) {
       iat: dayjs().unix(),
       exp: expiry,
     },
-    env.SECRET
+    env.SECRET,
   );
 
   return { token, expiry };
 }
 
-export async function decodeToken(token: string, db: Database) {
-  const env = await envSchema.validate(process.env, { abortEarly: false });
-
+export async function decodeToken(token: string, db: Database, env: Env) {
   const decoded = jwt.verify(token, env.SECRET, { complete: true });
 
   const data = typeof decoded === 'string' ? JSON.parse(decoded) : decoded;

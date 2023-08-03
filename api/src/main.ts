@@ -1,21 +1,28 @@
+import '@/shims';
 import fastify from 'fastify';
 import dotenv from 'dotenv';
 import path from 'path';
 import { envSchema } from '@/validators/env';
 import middleware from '@fastify/middie';
+import multipart from '@fastify/multipart';
 import cors from 'cors';
 import * as database from '@/database';
 import v1 from '@/routes/v1';
 import { ValidationError } from 'yup';
 import { json } from '@/helpers/response';
-import { ErrorHandler, Route } from '@/types/routing';
+import { type ErrorHandler, type Route } from '@/types/routing';
 import { HttpException } from '@/exceptions/http';
+import { JsonWebTokenError } from 'jsonwebtoken';
 
 const errorHandler = ((error, _, handler) => {
   if (error instanceof ValidationError) {
-    return json(handler, { error }, 422);
+    json(handler, { error }, 422);
+    return;
   } else if (error instanceof HttpException) {
-    return json(handler, error.message, error.statusCode);
+    json(handler, error.message, error.statusCode);
+    return;
+  } else if (error instanceof JsonWebTokenError) {
+    json(handler, { error: { message: error.message } }, 401);
   }
 
   handler.send(error);
@@ -40,8 +47,9 @@ async function main() {
   });
 
   await server.register(middleware);
+  await server.register(multipart);
 
-  server.register(route(v1), { prefix: 'v1' });
+  await server.register(route(v1), { prefix: 'v1' });
 
   await server.use(cors());
 
@@ -49,6 +57,11 @@ async function main() {
 
   server.decorateRequest('db', { getter: () => db });
   server.decorateRequest('env', { getter: () => env });
+  server.decorateRequest('config', {
+    getter: () => ({
+      storage: path.resolve(__dirname, './storage'),
+    }),
+  });
 
   server.setErrorHandler(errorHandler);
 

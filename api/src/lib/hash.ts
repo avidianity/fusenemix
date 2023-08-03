@@ -1,7 +1,9 @@
-export function make(value: string) {
-  return Bun.password.hash(value, { algorithm: 'bcrypt' });
+import bcrypt from 'bcrypt';
+
+export async function make(value: string) {
+  return await bcrypt.hash(value, 8);
 }
 
-export function check(hash: string, value: string) {
-  return Bun.password.verify(value, hash, 'bcrypt');
+export async function check(hash: string, value: string) {
+  return await bcrypt.compare(value, hash);
 }

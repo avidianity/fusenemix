@@ -13,6 +13,8 @@ export const envSchema = yup.object({
   DB_NAME: yup.string().required(),
   DB_USER: yup.string().required(),
   DB_PASS: yup.string().required(),
+
+  CLOUDMERSIVE_KEY: yup.string().required(),
 });
 
 export type Env = yup.InferType<typeof envSchema>;

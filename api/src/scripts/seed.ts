@@ -1,6 +1,6 @@
 import * as database from '@/database';
 import * as models from '@/models';
-import { NewUser } from '@/models/users';
+import { type NewUser } from '@/models/users';
 import { envSchema } from '@/validators/env';
 import { eq } from 'drizzle-orm';
 import { ulid } from 'ulid';

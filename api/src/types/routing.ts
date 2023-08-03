@@ -1,4 +1,3 @@
-import type { NextHandleFunction } from '@fastify/middie';
 import type {
   FastifyPluginOptions,
   RawServerDefault,
@@ -9,6 +8,8 @@ import type {
   FastifyError,
   FastifyRequest,
   FastifyReply,
+  preHandlerHookHandler,
+  preHandlerAsyncHookHandler,
 } from 'fastify';
 
 export type Route = FastifyPluginCallback<
@@ -23,7 +24,7 @@ export type Handler = RouteHandlerMethod;
 export type ErrorHandler = (
   error: FastifyError,
   request: FastifyRequest,
-  handler: FastifyReply
+  handler: FastifyReply,
 ) => void | Promise<void>;
 
-export type Middleware = NextHandleFunction;
+export type Middleware = preHandlerHookHandler | preHandlerAsyncHookHandler;

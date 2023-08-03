@@ -1,4 +1,4 @@
-import { Env } from '@/validators/env';
+import { type Env } from '@/validators/env';
 import mysql from 'mysql2/promise';
 import { drizzle } from 'drizzle-orm/mysql2';
 
@@ -14,6 +14,6 @@ export async function connect(env: Env) {
     }),
     {
       logger: env.ENV === 'development',
-    }
+    },
   );
 }
