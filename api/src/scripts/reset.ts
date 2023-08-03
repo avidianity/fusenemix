@@ -1,8 +1,10 @@
 import { envSchema } from '@/validators/env';
 import * as database from '@/database';
 import * as models from '@/models';
+import { loadEnv } from '@/lib/env';
 
 async function main() {
+  loadEnv();
   const env = await envSchema.validate(process.env, { abortEarly: false });
 
   const db = await database.connect(env);
