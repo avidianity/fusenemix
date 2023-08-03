@@ -11,6 +11,7 @@
     "migrate:generate": "drizzle-kit generate:mysql",
     "seed": "ts-node src/scripts/seed.ts",
     "reset": "ts-node src/scripts/reset.ts",
+    "test": "ts-node src/tests/index.test.ts",
     "jwt:secret": "ts-node src/scripts/jwt/secret.ts"
   },
   "devDependencies": {
@@ -21,6 +22,7 @@
     "@types/lodash": "^4.14.196",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^20.4.5",
+    "@types/tap": "^15.0.8",
     "@types/which": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
     "cors": "^2.8.5",
@@ -32,6 +34,7 @@
     "eslint-plugin-promise": "^6.1.1",
     "nodemon": "^3.0.1",
     "prettier": "^3.0.0",
+    "tap": "^16.3.8",
     "ts-node": "^10.9.1",
     "tsconfig-paths": "^4.2.0",
     "typescript": "^5.1.6"
@@ -44,7 +47,6 @@
     "dayjs": "^1.11.9",
     "dotenv": "^16.3.1",
     "drizzle-orm": "^0.27.2",
-    "error-cause-polyfill": "^2.0.0",
     "fastify": "^4.21.0",
     "jsonwebtoken": "8.5.1",
     "lodash": "^4.17.21",

@@ -1,10 +1,8 @@
-import 'error-cause-polyfill/auto';
-
 const originalErrorToString = Error.prototype.toString;
 
 Error.prototype.toString = function (indentLevel = 0) {
   let errorMessage = `${'\t'.repeat(indentLevel)}${originalErrorToString.call(
-    this
+    this,
   )}`;
 
   if (this.cause instanceof Error) {
@@ -52,7 +50,7 @@ const originalAggregateErrorToString = AggregateError.prototype.toString;
 
 AggregateError.prototype.toString = function (indentLevel = 0) {
   let errorMessage = `${'\t'.repeat(
-    indentLevel
+    indentLevel,
   )}${originalAggregateErrorToString.call(this)}`;
 
   if (this.cause instanceof Error) {

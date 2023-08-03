@@ -4,11 +4,11 @@ import * as database from '@/database';
 import path from 'path';
 import { loadEnv } from '@/lib/env';
 
-async function main() {
+export async function main() {
   loadEnv();
   const env = await envSchema.validate(process.env, { abortEarly: false });
 
-  const db = await database.connect(env);
+  const { db } = await database.connect(env);
 
   await migrate(db, {
     migrationsFolder: path.resolve(__dirname, '../migrations'),

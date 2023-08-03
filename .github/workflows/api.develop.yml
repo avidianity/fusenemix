@@ -58,3 +58,6 @@ jobs:
       - name: Check formatting
         run: npm run format:check
         working-directory: api
+      - name: Run tests
+        run: npm run test
+        working-directory: api

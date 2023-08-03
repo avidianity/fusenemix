@@ -7,12 +7,12 @@ import { ulid } from 'ulid';
 import * as hash from '@/lib/hash';
 import { loadEnv } from '@/lib/env';
 
-async function main() {
+export async function main() {
   loadEnv();
 
   const env = await envSchema.validate(process.env);
 
-  const db = await database.connect(env);
+  const { db } = await database.connect(env);
 
   const users = await db
     .select()

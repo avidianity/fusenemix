@@ -17,7 +17,7 @@ console.log = function (...args) {
       }
 
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };
 
@@ -29,7 +29,7 @@ console.error = function (...args) {
       }
 
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };
 
@@ -40,7 +40,7 @@ console.warn = function (...args) {
         return item.toString();
       }
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };
 
@@ -51,7 +51,7 @@ console.trace = function (...args) {
         return item.toString();
       }
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };
 
@@ -62,7 +62,7 @@ console.debug = function (...args) {
         return item.toString();
       }
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };
 
@@ -73,7 +73,7 @@ console.info = function (...args) {
         return item.toString();
       }
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };
 
@@ -84,7 +84,7 @@ console.group = function (...args) {
         return item.toString();
       }
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };
 
@@ -95,6 +95,6 @@ console.groupCollapsed = function (...args) {
         return item.toString();
       }
       return item;
-    }) ?? [])
+    }) ?? []),
   );
 };

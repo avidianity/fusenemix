@@ -1,5 +1,8 @@
 import '@/shims';
-import fastify from 'fastify';
+import fastify, {
+  type FastifyBaseLogger,
+  type FastifyHttpOptions,
+} from 'fastify';
 import path from 'path';
 import { envSchema } from '@/validators/env';
 import middleware from '@fastify/middie';
@@ -13,6 +16,7 @@ import { type ErrorHandler, type Route } from '@/types/routing';
 import { HttpException } from '@/exceptions/http';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { loadEnv } from '@/lib/env';
+import type { Server } from 'http';
 
 const errorHandler = ((error, _, handler) => {
   if (error instanceof ValidationError) {
@@ -35,14 +39,14 @@ const route = (route: Route): Route => {
   };
 };
 
-async function main() {
+export async function main(
+  options?: FastifyHttpOptions<Server, FastifyBaseLogger>,
+) {
   loadEnv();
 
   const env = await envSchema.validate(process.env, { abortEarly: false });
 
-  const server = fastify({
-    logger: true,
-  });
+  const server = fastify(options);
 
   await server.register(middleware);
   await server.register(multipart);
@@ -51,7 +55,7 @@ async function main() {
 
   await server.use(cors());
 
-  const db = await database.connect(env);
+  const { db, connection } = await database.connect(env);
 
   server.decorateRequest('db', { getter: () => db });
   server.decorateRequest('env', { getter: () => env });
@@ -63,14 +67,5 @@ async function main() {
 
   server.setErrorHandler(errorHandler);
 
-  const port = env.PORT ?? 8000;
-
-  await server.listen({
-    port,
-  });
+  return { server, env, db, connection };
 }
-
-main().catch((error) => {
-  console.error(error);
-  process.exit(1);
-});
