@@ -22,9 +22,11 @@
     "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/fluent-ffmpeg": "^2.1.21",
+    "@types/jsonwebtoken": "8.5.1",
     "@types/lodash": "^4.14.196",
     "@types/mime-types": "^2.1.1",
     "@types/node": "^20.4.5",
+    "@types/qs": "^6.9.7",
     "@types/tap": "^15.0.8",
     "@types/which": "^3.0.0",
     "@typescript-eslint/eslint-plugin": "^5.62.0",
@@ -43,9 +45,9 @@
     "typescript": "^5.1.6"
   },
   "dependencies": {
+    "@fastify/formbody": "^7.4.0",
     "@fastify/middie": "^8.3.0",
     "@fastify/multipart": "^7.7.3",
-    "@types/jsonwebtoken": "8.5.1",
     "axios": "^1.4.0",
     "bcrypt": "^5.1.0",
     "cors": "^2.8.5",
@@ -54,14 +56,21 @@
     "drizzle-kit": "^0.19.12",
     "drizzle-orm": "^0.27.2",
     "fastify": "^4.21.0",
+    "fastify-plugin": "^4.5.1",
     "jsonwebtoken": "^9.0.1",
     "lodash": "^4.17.21",
     "mime-types": "^2.1.35",
     "mysql2": "^3.5.2",
+    "qs": "^6.11.2",
+    "socket.io": "^4.7.2",
     "ulid": "^2.3.0",
     "which": "^3.0.1",
     "youtube-mp3-downloader": "^0.7.11",
     "ytdl-core": "^4.11.5",
     "yup": "^1.2.0"
+  },
+  "optionalDependencies": {
+    "bufferutil": "^4.0.7",
+    "utf-8-validate": "^5.0.10"
   }
 }

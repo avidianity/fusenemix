@@ -17,6 +17,9 @@ import { HttpException } from '@/exceptions/http';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { loadEnv } from '@/lib/env';
 import type { Server } from 'http';
+import socketIo from '@/plugins/socket-io';
+import formbody from '@fastify/formbody';
+import qs from 'qs';
 
 const errorHandler = ((error, _, handler) => {
   if (error instanceof ValidationError) {
@@ -26,7 +29,15 @@ const errorHandler = ((error, _, handler) => {
     json(handler, error.message, error.statusCode);
     return;
   } else if (error instanceof JsonWebTokenError) {
-    json(handler, { error: { message: error.message } }, 401);
+    json(
+      handler,
+      {
+        error: {
+          message: error.message,
+        },
+      },
+      401,
+    );
   }
 
   handler.send(error);
@@ -44,21 +55,33 @@ export async function main(
 ) {
   await loadEnv();
 
-  const env = await envSchema.validate(process.env, { abortEarly: false });
+  const env = await envSchema.validate(process.env, {
+    abortEarly: false,
+  });
 
   const server = fastify(options);
 
   await server.register(middleware);
   await server.register(multipart);
+  await server.register(socketIo);
+  await server.register(formbody, {
+    parser: (query) => qs.parse(query),
+  });
 
-  await server.register(route(v1), { prefix: 'v1' });
+  await server.register(route(v1), {
+    prefix: 'v1',
+  });
 
   await server.use(cors());
 
   const { db, connection } = await database.connect(env);
 
-  server.decorateRequest('db', { getter: () => db });
-  server.decorateRequest('env', { getter: () => env });
+  server.decorateRequest('db', {
+    getter: () => db,
+  });
+  server.decorateRequest('env', {
+    getter: () => env,
+  });
   server.decorateRequest('config', {
     getter: () => ({
       storage: path.resolve(__dirname, './storage'),
@@ -67,8 +90,19 @@ export async function main(
 
   server.setErrorHandler(errorHandler);
 
-  server.addHook('onClose', () => {
+  server.addHook('onClose', (_, done) => {
     connection.destroy();
+    done();
+  });
+
+  server.ready((error) => {
+    if (error) {
+      throw error;
+    }
+
+    server.io.on('connection', (socket) => {
+      console.info('Socket connected!', socket.id);
+    });
   });
 
   return { server, env };

@@ -2,3 +2,4 @@ src/migrations
 src/storage
 src/shims
 build
+drizzle.config.ts

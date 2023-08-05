@@ -23,7 +23,9 @@ export async function createToken(user: User, env: Env) {
 }
 
 export async function decodeToken(token: string, db: Database, env: Env) {
-  const decoded = jwt.verify(token, env.SECRET, { complete: true });
+  const decoded = jwt.verify(token, env.SECRET, {
+    complete: true,
+  });
 
   const data = typeof decoded === 'string' ? JSON.parse(decoded) : decoded;
 
