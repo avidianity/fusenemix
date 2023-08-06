@@ -14,13 +14,13 @@ export async function main() {
 
   const { db } = await database.connect(env);
 
-  const users = await db
+  const [user] = await db
     .select()
     .from(models.users)
     .where(eq(models.users.email, 'manlupigjohnmichael@gmail.com'))
     .limit(1);
 
-  if (users.length === 0) {
+  if (!user) {
     const payload: NewUser = {
       id: ulid(),
       firstName: 'John Michael',

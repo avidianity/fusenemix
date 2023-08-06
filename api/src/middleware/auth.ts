@@ -4,7 +4,7 @@ import { authSchema } from '@/validators/middleware/auth';
 import * as lib from '@/lib/auth';
 import { ValidationError } from 'yup';
 
-export const auth: Middleware = async (request, _, next) => {
+export const auth: Middleware = async function (request, _, __) {
   try {
     const validated = await authSchema.validate(request.headers);
 
@@ -12,17 +12,14 @@ export const auth: Middleware = async (request, _, next) => {
 
     const token = fragments[1];
 
-    const user = await lib.decodeToken(token, request.db, request.env);
+    const user = await lib.decodeToken(token, this.db, this.env);
 
     request.user = user;
-
-    next();
   } catch (error) {
     if (error instanceof ValidationError) {
-      next(new UnauthenticatedException('Token is missing.'));
-      return;
+      throw new UnauthenticatedException('Token is missing.');
     }
 
-    next(error as Error);
+    throw error;
   }
 };

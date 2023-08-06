@@ -1,0 +1,7 @@
+check-coverage: false
+color: true
+comments: true
+coverage: true
+debug: false
+files:
+  - 'tests/**/*.test.ts'

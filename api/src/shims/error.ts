@@ -1,3 +1,5 @@
+import { ValidationError } from 'yup';
+
 const originalErrorToString = Error.prototype.toString;
 
 Error.prototype.toString = function (indentLevel = 0) {
@@ -35,6 +37,10 @@ Error.prototype.toJSON = function () {
       alt[key] = value;
     }
   }, _this);
+
+  if (process.env.ENV === 'production' || this instanceof ValidationError) {
+    delete alt.stack;
+  }
 
   if ('stack' in alt) {
     alt.stack = alt.stack

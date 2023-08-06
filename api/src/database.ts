@@ -1,6 +1,7 @@
 import { type Env } from '@/validators/env';
 import mysql from 'mysql2/promise';
 import { drizzle } from 'drizzle-orm/mysql2';
+import * as schema from '@/models';
 
 export async function connect(env: Env) {
   const connection = await mysql.createConnection({
@@ -15,6 +16,7 @@ export async function connect(env: Env) {
   return {
     db: drizzle(connection, {
       logger: env.ENV === 'development',
+      schema,
     }),
     connection,
   };

@@ -10,6 +10,7 @@ import type {
   FastifyReply,
   preHandlerHookHandler,
   preHandlerAsyncHookHandler,
+  FastifyInstance,
 } from 'fastify';
 
 export type Route = FastifyPluginCallback<
@@ -28,3 +29,18 @@ export type ErrorHandler = (
 ) => void | Promise<void>;
 
 export type Middleware = preHandlerHookHandler | preHandlerAsyncHookHandler;
+
+export interface ResourceController {
+  index?: Handler;
+  show?: Handler;
+  store?: Handler;
+  update?: Handler;
+  destroy?: Handler;
+}
+
+export interface ResourceOptions {
+  fastify: FastifyInstance;
+  path: string;
+  controller: ResourceController;
+  middleware?: Middleware;
+}

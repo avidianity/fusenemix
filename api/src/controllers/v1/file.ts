@@ -5,17 +5,20 @@ import { ulid } from 'ulid';
 import mimeTypes from 'mime-types';
 import fs from 'fs';
 import * as os from '@/helpers/os';
-import axios, { isAxiosError } from 'axios';
+import { isAxiosError } from 'axios';
 import { downloadSchema } from '@/validators/controllers/v1/file';
 import { BadRequestException } from '@/exceptions/bad-request';
+import FormData from 'form-data';
 
-export const download: Handler = async (request, response) => {
-  const validated = await downloadSchema.validate(request.body);
+export const download: Handler = async function (request, response) {
+  const validated = await downloadSchema.validate(request.query);
 
   try {
-    const buffer = await os.readFile(validated.fileName);
+    const buffer = await os.readFile(
+      resolve(this.config.storage, validated.fileName),
+    );
 
-    response.send(buffer);
+    return await response.send(buffer);
   } catch (error) {
     const exception = new BadRequestException({
       message: 'File does not exist.',
@@ -27,7 +30,7 @@ export const download: Handler = async (request, response) => {
   }
 };
 
-export const pdfToDocx: Handler = async (request, response) => {
+export const pdfToDocx: Handler = async function (request, response) {
   const files = request.files();
   const temp: Array<{
     id: string;
@@ -36,7 +39,7 @@ export const pdfToDocx: Handler = async (request, response) => {
     path: string;
   }> = [];
   const payload: any[] = [];
-  const storage = request.config.storage;
+  const storage = this.config.storage;
 
   for await (const data of files) {
     const id = ulid();
@@ -57,7 +60,7 @@ export const pdfToDocx: Handler = async (request, response) => {
       temp.push({ id, fileName, realFileName: data.filename, path });
     }
   }
-  const apiKey = request.env.CLOUDMERSIVE_KEY;
+  const apiKey = this.env.CLOUDMERSIVE_KEY;
   const url = 'https://api.cloudmersive.com/convert/pdf/to/docx';
 
   for (const entry of temp) {
@@ -66,9 +69,12 @@ export const pdfToDocx: Handler = async (request, response) => {
       const fileName = `${entry.id}.docx`;
       const docxFilePath = resolve(storage, `./${fileName}`);
 
-      const response = await axios.post(url, pdfData, {
+      const data = new FormData();
+
+      data.append('inputFile', pdfData, 'file');
+
+      const response = await this.http.post(url, data, {
         headers: {
-          'Content-Type': 'application/octet-stream',
           Apikey: apiKey,
         },
         responseType: 'arraybuffer',

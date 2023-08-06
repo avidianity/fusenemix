@@ -7,5 +7,5 @@ export function json(handler: FastifyReply, data: unknown, code?: number) {
     response.code(code);
   }
 
-  response.send(data);
+  return response.send(data);
 }

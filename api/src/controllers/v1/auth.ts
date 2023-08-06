@@ -9,26 +9,24 @@ import { omit } from 'lodash';
 import * as auth from '@/lib/auth';
 import { ulid } from 'ulid';
 
-export const login: Handler = async (request, response) => {
+export const login: Handler = async function (request, response) {
   const payload = await loginSchema.validate(request.body, {
     abortEarly: false,
   });
 
-  const result = await request.db
+  const [user] = await this.db
     .select()
     .from(models.users)
     .where(eq(models.users.email, payload.email))
     .limit(1);
 
-  if (result.length === 0) {
+  if (!user) {
     throw new BadRequestException({
       error: {
         message: 'User does not exist.',
       },
     });
   }
-
-  const user = result[0];
 
   if (!(await hash.check(user.password, payload.password))) {
     throw new BadRequestException({
@@ -38,7 +36,7 @@ export const login: Handler = async (request, response) => {
     });
   }
 
-  const { token, expiry } = await auth.createToken(user, request.env);
+  const { token, expiry } = await auth.createToken(user, this.env);
 
   json(response, {
     data: omit(user, ['password']),
@@ -54,10 +52,10 @@ export const check: Handler = async (request, response) => {
   json(response, { data: omit(request.user, ['password']) });
 };
 
-export const register: Handler = async (request, response) => {
+export const register: Handler = async function (request, response) {
   const payload = await registerSchema.validate(request.body);
 
-  const exists = await request.db
+  const exists = await this.db
     .select()
     .from(models.users)
     .where(eq(models.users.email, payload.email))
@@ -73,22 +71,20 @@ export const register: Handler = async (request, response) => {
 
   const id = ulid();
 
-  await request.db.insert(models.users).values({
+  await this.db.insert(models.users).values({
     id,
     createdAt: new Date(),
     updatedAt: new Date(),
     ...payload,
   });
 
-  const result = await request.db
+  const [user] = await this.db
     .select()
     .from(models.users)
     .where(eq(models.users.id, id))
     .limit(1);
 
-  const user = result[0];
-
-  const { token, expiry } = await auth.createToken(user, request.env);
+  const { token, expiry } = await auth.createToken(user, this.env);
 
   json(response, {
     data: omit(user, ['password']),

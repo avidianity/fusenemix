@@ -1,20 +1,23 @@
 import type { Env } from '@/validators/env';
-import { type Database } from '@/types/database';
-import { type User } from '@/models/users';
-import { type Server } from 'socket.io';
+import type { Database } from '@/types/database';
+import type { User } from '@/models/users';
+import type { Server } from 'socket.io';
+import type { RedisClient } from '@/types/redis';
+import type { AxiosInstance } from 'axios';
 
 declare module 'fastify' {
   interface FastifyInstance {
-    io: Server;
-  }
-
-  export interface FastifyRequest {
     db: Database;
     env: Env;
-    user: User;
+    io: Server;
+    redis: RedisClient;
+    http: AxiosInstance;
     config: {
       storage: string;
     };
-    io: Server;
+  }
+
+  export interface FastifyRequest {
+    user: User;
   }
 }

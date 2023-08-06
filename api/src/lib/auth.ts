@@ -29,15 +29,19 @@ export async function decodeToken(token: string, db: Database, env: Env) {
 
   const data = typeof decoded === 'string' ? JSON.parse(decoded) : decoded;
 
-  const result = await db
+  const [user] = await db
     .select()
     .from(models.users)
     .where(eq(models.users.id, data.payload.sub))
     .limit(1);
 
-  if (result.length === 0) {
-    throw new InvalidTokenException('No user found.');
+  if (!user) {
+    throw new InvalidTokenException({
+      error: {
+        message: 'Invalid token.',
+      },
+    });
   }
 
-  return result[0];
+  return user;
 }

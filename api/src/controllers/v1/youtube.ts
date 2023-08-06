@@ -7,10 +7,10 @@ import * as os from '@/helpers/os';
 import { ulid } from 'ulid';
 import { type VideoInfo } from '@/types/youtube';
 
-export const mp3: Handler = async (request, response) => {
+export const mp3: Handler = async function (request, response) {
   const payload = await mp3Schema.validate(request.query);
 
-  const storage = request.config.storage;
+  const storage = this.config.storage;
 
   try {
     const info = await ytdl.getInfo(payload.url);

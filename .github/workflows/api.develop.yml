@@ -14,7 +14,6 @@ jobs:
         node-version: [18.x, 16.x]
     env:
       DEBIAN_FRONTEND: noninteractive
-      CLOUDMERSIVE_KEY: ${{ secrets.CLOUDMERSIVE_KEY }}
     services:
       fusenemix-mysql:
         image: mysql/mysql-server:8.0
@@ -25,12 +24,16 @@ jobs:
           MYSQL_USER: fusenemix
           MYSQL_PASSWORD: password
         ports:
-          - 3306:3306
+          - "${DB_PORT:-3306}:3306"
         options: >-
           --health-cmd="mysqladmin ping"
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
+      fusenemix-redis:
+        image: redis:alpine
+        ports:
+          - "${REDIS_PORT:-6379}:6379"
 
     steps:
       - uses: actions/checkout@v2

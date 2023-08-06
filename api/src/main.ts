@@ -8,7 +8,6 @@ import { envSchema } from '@/validators/env';
 import middleware from '@fastify/middie';
 import multipart from '@fastify/multipart';
 import cors from 'cors';
-import * as database from '@/database';
 import v1 from '@/routes/v1';
 import { ValidationError } from 'yup';
 import { json } from '@/helpers/response';
@@ -17,17 +16,19 @@ import { HttpException } from '@/exceptions/http';
 import { JsonWebTokenError } from 'jsonwebtoken';
 import { loadEnv } from '@/lib/env';
 import type { Server } from 'http';
-import socketIo from '@/plugins/socket-io';
 import formbody from '@fastify/formbody';
 import qs from 'qs';
+import socketIo from '@/plugins/socket-io';
+import database from '@/plugins/database';
+import redis from '@/plugins/redis';
+import queue from '@/plugins/queue';
+import http from '@/plugins/http';
 
 const errorHandler = ((error, _, handler) => {
   if (error instanceof ValidationError) {
     json(handler, { error }, 422);
-    return;
   } else if (error instanceof HttpException) {
     json(handler, error.message, error.statusCode);
-    return;
   } else if (error instanceof JsonWebTokenError) {
     json(
       handler,
@@ -38,9 +39,9 @@ const errorHandler = ((error, _, handler) => {
       },
       401,
     );
+  } else {
+    handler.send(error);
   }
-
-  handler.send(error);
 }) satisfies ErrorHandler;
 
 const route = (route: Route): Route => {
@@ -63,7 +64,14 @@ export async function main(
 
   await server.register(middleware);
   await server.register(multipart);
-  await server.register(socketIo);
+  await server.register(socketIo, {
+    cors: {
+      origin: (origin, callback) => {
+        callback(null, origin);
+      },
+    },
+    path: '/ws',
+  });
   await server.register(formbody, {
     parser: (query) => qs.parse(query),
   });
@@ -74,15 +82,13 @@ export async function main(
 
   await server.use(cors());
 
-  const { db, connection } = await database.connect(env);
+  await server.register(database, env);
+  await server.register(redis, env);
+  await server.register(queue);
+  await server.register(http);
 
-  server.decorateRequest('db', {
-    getter: () => db,
-  });
-  server.decorateRequest('env', {
-    getter: () => env,
-  });
-  server.decorateRequest('config', {
+  server.decorate('env', env);
+  server.decorate('config', {
     getter: () => ({
       storage: path.resolve(__dirname, './storage'),
     }),
@@ -90,19 +96,10 @@ export async function main(
 
   server.setErrorHandler(errorHandler);
 
-  server.addHook('onClose', (_, done) => {
-    connection.destroy();
-    done();
-  });
-
   server.ready((error) => {
     if (error) {
       throw error;
     }
-
-    server.io.on('connection', (socket) => {
-      console.info('Socket connected!', socket.id);
-    });
   });
 
   return { server, env };

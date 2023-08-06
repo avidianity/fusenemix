@@ -14,6 +14,11 @@ export const envSchema = yup.object({
   DB_USER: yup.string().required(),
   DB_PASS: yup.string().required(),
 
+  REDIS_HOST: yup.string().required(),
+  REDIS_PORT: yup.number().required(),
+  REDIS_USER: yup.string(),
+  REDIS_PASS: yup.string(),
+
   CLOUDMERSIVE_KEY: yup.string().required(),
 });
 

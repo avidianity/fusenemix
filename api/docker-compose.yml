@@ -22,6 +22,19 @@ services:
         - '-p${DB_PASS}'
       retries: 3
       timeout: 5s
+  redis:
+    container_name: fusenemix-redis
+    image: 'redis:alpine'
+    ports:
+      - '${REDIS_PORT:-6379}:6379'
+    volumes:
+      - 'fusenemix-redis:/data'
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      retries: 3
+      timeout: 5s
 volumes:
   fusenemix-mysql:
+    driver: local
+  fusenemix-redis:
     driver: local
