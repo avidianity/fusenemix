@@ -1,17 +1,17 @@
 import childProcess from 'child_process';
 import util from 'util';
-import fs from 'fs';
+import fs from 'fs/promises';
 import stream from 'stream';
 import which from 'which';
 import { CommandNotFoundException } from '@/exceptions/command-not-found';
 
 export const exec = util.promisify(childProcess.exec);
 
-export const unlink = util.promisify(fs.unlink);
+export const unlink = fs.unlink;
 
-export const readFile = util.promisify(fs.readFile);
+export const readFile = fs.readFile;
 
-export const writeFile = util.promisify(fs.writeFile);
+export const writeFile = fs.writeFile;
 
 export const pump = util.promisify(stream.pipeline);
 

@@ -19,28 +19,41 @@ export async function main() {
   await app.register(redis, env);
   await app.register(queue);
 
-  app.redis.subscribe('job', async (payload) => {
-    const { type, args } = await jobEventSchema
-      .validate(JSON.parse(payload))
-      .catch(async (error) => {
-        console.error('job did not pass validation', { error, payload });
+  app.redis.subscribe('job', (payload) => {
+    (async () => {
+      const { type, args } = await jobEventSchema
+        .validate(JSON.parse(payload), {
+          abortEarly: false,
+        })
+        .catch(async (error) => {
+          console.error('Job did not pass validation', { error, payload });
 
-        return { type: null, args: null };
-      });
+          return { type: null, args: null };
+        });
 
-    if (!type && !args) {
-      return;
-    }
+      if (!type && !args) {
+        return;
+      }
 
-    try {
-      await app.queue.processor.handle(type, ...args);
-    } catch (error) {
+      try {
+        console.info(`[Job:${type}] Processing`);
+
+        await app.queue.processor.handle(type, ...args);
+
+        console.info(`[Job:${type}] Processed`);
+      } catch (error) {
+        console.error('Unable to handle job', {
+          error,
+          type,
+          args,
+        });
+      }
+    })().catch((error) => {
       console.error('Unable to handle job', {
         error,
-        type,
-        args,
+        payload,
       });
-    }
+    });
   });
 
   process.on('SIGINT', () => {

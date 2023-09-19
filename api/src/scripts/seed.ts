@@ -10,7 +10,9 @@ import { loadEnv } from '@/lib/env';
 export async function main() {
   await loadEnv();
 
-  const env = await envSchema.validate(process.env);
+  const env = await envSchema.validate(process.env, {
+    abortEarly: false,
+  });
 
   const { db } = await database.connect(env);
 

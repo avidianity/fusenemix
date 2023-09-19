@@ -6,6 +6,7 @@ import Downloader from 'youtube-mp3-downloader';
 import * as os from '@/helpers/os';
 import { ulid } from 'ulid';
 import { type VideoInfo } from '@/types/youtube';
+import contentDisposition from 'content-disposition';
 
 export const mp3: Handler = async function (request, response) {
   const payload = await mp3Schema.validate(request.query);
@@ -47,7 +48,7 @@ export const mp3: Handler = async function (request, response) {
     os.unlink(results.file).catch(console.error);
 
     return await response
-      .header('Content-Disposition', `attachment; filename="${title}.mp3"`)
+      .header('Content-Disposition', contentDisposition(`${title}.mp3`))
       .header('Content-Type', 'audio/mpeg')
       .send(buffer);
   } catch (error) {

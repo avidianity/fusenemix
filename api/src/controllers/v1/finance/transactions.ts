@@ -10,7 +10,9 @@ import { ulid } from 'ulid';
 import { indexQuerySchema } from '@/validators/controllers/v1/finance/transaction';
 
 export const index: Handler = async function (request, response) {
-  const params = await indexQuerySchema.validate(request.query);
+  const params = await indexQuerySchema.validate(request.query, {
+    abortEarly: false,
+  });
 
   const filters: SQL[] = [
     eq(models.financeTransactions.userId, request.user.id),
@@ -100,9 +102,9 @@ export const store: Handler = async function (request, response) {
 
 export const update: Handler = async function (request, response) {
   const { id } = await modelIdSchema.validate(request.params);
-  const data = await financeTransactionSchema
-    .partial()
-    .validate(request.body, { abortEarly: false });
+  const data = await financeTransactionSchema.partial().validate(request.body, {
+    abortEarly: false,
+  });
 
   const [exists] = await this.db
     .select()

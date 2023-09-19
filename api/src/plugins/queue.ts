@@ -7,6 +7,8 @@ export default fp(
     const manager = new Manager(fastify.redis);
     const processor = new Processor(fastify);
 
+    await processor.readClasses();
+
     const bundle = {
       manager,
       processor,

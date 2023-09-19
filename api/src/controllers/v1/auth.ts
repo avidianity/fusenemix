@@ -49,11 +49,15 @@ export const login: Handler = async function (request, response) {
 };
 
 export const check: Handler = async (request, response) => {
-  json(response, { data: omit(request.user, ['password']) });
+  json(response, {
+    data: omit(request.user, ['password']),
+  });
 };
 
 export const register: Handler = async function (request, response) {
-  const payload = await registerSchema.validate(request.body);
+  const payload = await registerSchema.validate(request.body, {
+    abortEarly: false,
+  });
 
   const exists = await this.db
     .select()
